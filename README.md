@@ -1,5 +1,16 @@
 # MarginMind AI — CSV Auditor
 
+> An AI-powered profit auditor for small online sellers in India.
+
+**Live Demo:** https://marginmind-ai.onrender.com
+
+**GitHub Repository:** https://github.com/saurabh18082005-cyber/MarginMind-AI
+
+Upload your sales CSV, calculate estimated profitability using Python,
+compare product margins, and request AI-generated explanations to
+help identify potential profit leaks.
+
+
 A lightweight Flask app for Indian small online sellers to inspect estimated product profitability from a CSV file.
 
 ## Features
