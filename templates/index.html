@@ -1,0 +1,507 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MarginMind AI — Know what you actually keep</title>
+  <meta name="description" content="A lightweight profit auditor with AI-powered explanations for small online sellers.">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .ai-insights {
+      margin-top: 28px;
+      padding: 28px;
+      border: 1px solid #d9d2ff;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #f5f2ff, #f0fbf7);
+    }
+    .ai-insights-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .ai-icon {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      background: #e4dcff;
+      color: #6543bc;
+      font-size: 25px;
+    }
+    .ai-insights h3 {
+      margin: 0 0 7px;
+    }
+    .ai-insights p {
+      line-height: 1.65;
+    }
+    .ai-description {
+      margin: 0;
+      color: #626579;
+      font-size: 14px;
+    }
+    .ai-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 18px;
+      padding: 13px 20px;
+      border: 0;
+      border-radius: 12px;
+      background: #6d4bd1;
+      color: white;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .2s, transform .2s;
+    }
+    .ai-button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      opacity: .92;
+    }
+    .ai-button:disabled {
+      cursor: wait;
+      opacity: .65;
+    }
+    .ai-status {
+      margin: 14px 0 0;
+      color: #53566b;
+      font-size: 14px;
+    }
+    .ai-output {
+      margin-top: 20px;
+      padding: 22px;
+      border: 1px solid #e1def0;
+      border-radius: 16px;
+      background: #fff;
+      color: #303347;
+      line-height: 1.75;
+      overflow-wrap: anywhere;
+    }
+    .ai-output[hidden],
+    .ai-status[hidden] {
+      display: none;
+    }
+    .ai-output pre {
+      margin: 0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font: inherit;
+    }
+    .ai-disclaimer {
+      margin-top: 16px;
+      color: #77798b;
+      font-size: 12px;
+    }
+    @media (max-width: 600px) {
+      .ai-insights {
+        padding: 20px;
+      }
+      .ai-insights-header {
+        gap: 12px;
+      }
+      .ai-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="navbar">
+    <a class="brand" href="#home" aria-label="MarginMind AI home">
+      <span class="brand-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span>MarginMind <b>AI</b></span>
+    </a>
+
+    <nav class="nav-links" aria-label="Main navigation">
+      <a class="active" href="#home">Home</a>
+      <a href="#analyse">Analyse</a>
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a class="github-link" href="https://github.com/" target="_blank" rel="noreferrer">↗ <span>GitHub</span></a>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero-blobs blob-one"></div>
+      <div class="hero-blobs blob-two"></div>
+
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="spark">✦</span> THE SMALL-SELLER PROFIT AUDITOR</span>
+        <h1>Sales are great.<br><span>Know what you actually keep.</span></h1>
+        <p>Upload your sales CSV to calculate estimated profit, compare products, and spot where costs may be eating into your margins.</p>
+
+        <div class="trust-pills">
+          <span class="pill pill-green"><b>✓</b> Calculations run in Python</span>
+          <span class="pill pill-blue"><b>✦</b> Optional Gemma AI insights</span>
+          <span class="pill pill-purple"><b>⬡</b> You control AI requests</span>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-label="Illustration of the profit dashboard">
+        <div class="floating-dot dot-a"></div>
+        <div class="floating-dot dot-b"></div>
+
+        <div class="mini-window">
+          <div class="window-bar"><i></i><i></i><i></i><span>MarginMind overview</span></div>
+          <div class="mini-layout">
+            <div class="mini-sidebar">
+              <b>▦ &nbsp; Overview</b>
+              <span>▤ &nbsp; Products</span>
+              <span>⌁ &nbsp; Costs</span>
+              <span>✧ &nbsp; Insights</span>
+            </div>
+            <div class="mini-main">
+              <h3>Profit overview</h3>
+              <small>Illustrative preview — not live data</small>
+              <div class="mini-metrics">
+                <div><small>Net revenue</small><b>₹48,250</b><em>Example</em></div>
+                <div><small>Est. profit</small><b>₹12,430</b><em>Example</em></div>
+              </div>
+              <div class="chart-label"><span>Illustrative profit trend</span><b>Example</b></div>
+              <svg viewBox="0 0 330 100" role="img" aria-label="Illustrative profit line">
+                <defs>
+                  <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#22c987" stop-opacity=".28"/>
+                    <stop offset="100%" stop-color="#22c987" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0 78 C22 72 28 42 54 48 S91 83 116 56 S154 15 180 35 S218 65 241 38 S282 53 330 10 L330 100 L0 100Z" fill="url(#area)"/>
+                <path d="M0 78 C22 72 28 42 54 48 S91 83 116 56 S154 15 180 35 S218 65 241 38 S282 53 330 10" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="annotation annotation-one">See what you<br>actually keep <span>↙</span></div>
+        <div class="annotation annotation-two">Compare products<br>and costs <span>↙</span></div>
+      </div>
+    </section>
+
+    <section class="upload-panel" id="analyse">
+      <div class="upload-top">
+        <div class="upload-main">
+          <div class="panel-title">
+            <span class="panel-icon green-icon">▣</span>
+            <div>
+              <h2>Upload your sales CSV</h2>
+              <p>Select a .csv file from your computer to analyse your product profitability.</p>
+            </div>
+          </div>
+
+          <form method="post" enctype="multipart/form-data" class="upload-form">
+            <label class="drop-zone" for="sales_file">
+              <span class="cloud-icon">☁</span>
+              <strong>Drag and drop your CSV file here</strong>
+              <span>or click to browse</span>
+              <input id="sales_file" name="sales_file" type="file" accept=".csv,text/csv" required>
+              <small>Supports .csv files up to 5 MB</small>
+            </label>
+            <button class="primary-button" type="submit">↑ &nbsp; Choose file &amp; analyse</button>
+          </form>
+        </div>
+
+        <aside class="sample-aside">
+          <h3>Need a sample file?</h3>
+          <p>Download a sample CSV with example products and costs to see how it works.</p>
+          <a class="sample-button" href="{{ url_for('sample_csv') }}">↓ &nbsp; Download Sample CSV</a>
+          <div class="upload-tips">
+            <strong>What to upload?</strong>
+            <ul>
+              <li>CSV format (.csv)</li>
+              <li>Include product sales and cost details</li>
+              <li>Use the same column names as the sample file</li>
+              <li>Maximum file size: 5 MB</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+
+      <div class="sample-preview">
+        <div class="preview-heading">
+          <div>
+            <span class="panel-icon green-icon">▦</span>
+            <div>
+              <h3>Sample data preview</h3>
+              <p>Here's what the CSV file looks like:</p>
+            </div>
+          </div>
+          <a href="{{ url_for('sample_csv') }}">View full sample <span>→</span></a>
+        </div>
+
+        <div class="table-scroll">
+          <table class="sample-table">
+            <thead>
+              <tr>
+                <th>product</th><th>units_sold</th><th>selling_price</th>
+                <th>product_cost</th><th>shipping_cost</th><th>platform_fee</th>
+                <th>discount</th><th>returns</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Cotton Tote Bag</td><td>40</td><td>399</td><td>150</td><td>35</td><td>950</td><td>500</td><td>2</td></tr>
+              <tr><td>Printed T-Shirt</td><td>55</td><td>599</td><td>260</td><td>45</td><td>1800</td><td>1200</td><td>5</td></tr>
+              <tr><td>Beaded Bracelet</td><td>80</td><td>199</td><td>55</td><td>25</td><td>700</td><td>300</td><td>3</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="preview-note">Illustrative sample data only — these are not real seller results.</p>
+      </div>
+    </section>
+
+    {% if error %}
+    <section class="alert error" role="alert">
+      <strong>We couldn't analyse that file</strong>
+      <p>{{ error }}</p>
+    </section>
+    {% endif %}
+
+    {% if totals and results is not none %}
+    <section class="results-section" aria-labelledby="results-title" id="results">
+      <div class="results-heading">
+        <div>
+          <p class="eyebrow">YOUR REPORT</p>
+          <h2 id="results-title">Profitability overview</h2>
+          <p class="muted">Source file: {{ filename }}</p>
+        </div>
+        <span class="estimate-pill">Estimated results</span>
+      </div>
+
+      <div class="metric-grid">
+        <article class="metric-card">
+          <span>Net revenue</span>
+          <strong>{{ totals.net_revenue | money }}</strong>
+          <small>After discounts and returned sales value</small>
+        </article>
+        <article class="metric-card">
+          <span>Estimated profit</span>
+          <strong class="{{ 'negative' if totals.estimated_profit < 0 else '' }}">{{ totals.estimated_profit | money }}</strong>
+          <small>Before costs not included in your file</small>
+        </article>
+        <article class="metric-card">
+          <span>Profit margin</span>
+          <strong>{{ (totals.profit_margin_pct | round(2) ~ '%') if totals.profit_margin_pct is not none else '—' }}</strong>
+          <small>Estimated profit ÷ net revenue</small>
+        </article>
+        <article class="metric-card">
+          <span>Products analysed</span>
+          <strong>{{ totals.product_count }}</strong>
+          <small>{{ totals.units_sold }} units sold in the uploaded rows</small>
+        </article>
+      </div>
+
+      <div class="table-card">
+        <div class="table-heading">
+          <div>
+            <h3>Product profitability</h3>
+            <p class="muted">Ranked by estimated profit, highest first.</p>
+          </div>
+          <span class="table-count">{{ results | length }} products</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th><th>Units</th><th>Net revenue</th>
+                <th>Estimated profit</th><th>Margin</th><th>Return rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in results %}
+              <tr>
+                <td class="product-name">{{ row.product }}</td>
+                <td>{{ row.units_sold }}</td>
+                <td>{{ row.net_revenue | money }}</td>
+                <td class="{{ 'negative' if row.estimated_profit < 0 else 'positive' }}">{{ row.estimated_profit | money }}</td>
+                <td>{{ (row.profit_margin_pct | round(2) ~ '%') if row.profit_margin_pct is not none else '—' }}</td>
+                <td>{{ (row.return_rate_pct | round(2) ~ '%') if row.return_rate_pct is not none else '—' }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="notice">
+        <strong>Read this before making business decisions</strong>
+        <p>This MVP deducts the selling value of returned units but does not credit back product or shipping costs for those units. It excludes taxes, packaging, labour, advertising, payment settlement timing, and other costs unless included in the CSV. Results are estimates, not accounting advice.</p>
+      </div>
+
+      <section class="ai-insights" id="ai-insights" aria-labelledby="ai-title">
+        <div class="ai-insights-header">
+          <div class="ai-icon" aria-hidden="true">✦</div>
+          <div>
+            <h3 id="ai-title">Gemma AI Profit Insights</h3>
+            <p class="ai-description">Turn your calculated sales metrics into practical explanations and next steps for your business.</p>
+          </div>
+        </div>
+
+        <p class="ai-description">Your CSV calculations stay in Python. When you request insights, this app sends aggregate report metrics and selected product summaries to the configured AI API, not the original CSV file.</p>
+
+        <button class="ai-button" id="generate-insights" type="button">
+          ✦ &nbsp; Generate AI Profit Insights
+        </button>
+
+        <p class="ai-status" id="ai-status" role="status" aria-live="polite" hidden></p>
+
+        <div class="ai-output" id="ai-output" aria-label="AI-generated profit insights" hidden>
+          <pre id="ai-text"></pre>
+        </div>
+
+        <p class="ai-disclaimer">AI-generated suggestions can be inaccurate. Verify the figures and use your own judgement before making financial or business decisions. API access and usage limits apply.</p>
+
+        <script type="application/json" id="report-data">{{ {"totals": totals, "products": results} | tojson }}</script>
+      </section>
+    </section>
+    {% endif %}
+
+    <section class="features-section" id="features">
+      <div class="features-intro">
+        <p class="eyebrow">BUILT FOR CLARITY</p>
+        <h2>Useful numbers, not made-up answers.</h2>
+        <p>Practical insights for people building a business one sale at a time.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card feature-green">
+          <span class="feature-icon">▦</span>
+          <div><h3>Transparent maths</h3><p>Core financial calculations are performed by code, not generated by an AI model.</p></div>
+        </article>
+        <article class="feature-card feature-blue">
+          <span class="feature-icon">◇</span>
+          <div><h3>Product-level view</h3><p>Compare products by estimated profit, margin, revenue, and return rate.</p></div>
+        </article>
+        <article class="feature-card feature-purple">
+          <span class="feature-icon">◔</span>
+          <div><h3>Easy to use</h3><p>Upload your CSV and get a clear breakdown without complex accounting software.</p></div>
+        </article>
+        <article class="feature-card feature-orange">
+          <span class="feature-icon">♧</span>
+          <div><h3>Privacy-conscious</h3><p>AI requests send report metrics and selected product summaries, not the original uploaded CSV.</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="how-section" id="how-it-works">
+      <p class="eyebrow">HOW IT WORKS</p>
+      <h2>From spreadsheet to clearer decisions.</h2>
+      <div class="steps-grid">
+        <article><b>01</b><h3>Upload</h3><p>Choose a CSV containing your product sales and costs.</p></article>
+        <article><b>02</b><h3>Calculate</h3><p>Python validates the columns and calculates estimated profitability.</p></article>
+        <article><b>03</b><h3>Understand</h3><p>Review product rankings and optionally request AI explanations based on your calculated metrics.</p></article>
+      </div>
+    </section>
+
+    <footer class="footer" id="about">
+      <a class="brand" href="#home">
+        <span class="brand-icon"><span></span><span></span><span></span></span>
+        <span>MarginMind <b>AI</b></span>
+      </a>
+      <span>Early MVP · Built for small sellers in India 🇮🇳</span>
+      <span>Transparent calculations. Clearer decisions.</span>
+    </footer>
+  </main>
+
+  <script>
+    const input = document.getElementById("sales_file");
+    const drop = document.querySelector(".drop-zone");
+
+    if (input && drop) {
+      input.addEventListener("change", () => {
+        const fileName = input.files.length
+          ? input.files[0].name
+          : "Drag and drop your CSV file here";
+        drop.querySelector("strong").textContent = fileName;
+      });
+
+      ["dragenter", "dragover"].forEach(eventName => {
+        drop.addEventListener(eventName, event => {
+          event.preventDefault();
+          drop.classList.add("drag-over");
+        });
+      });
+
+      ["dragleave", "drop"].forEach(eventName => {
+        drop.addEventListener(eventName, event => {
+          event.preventDefault();
+          drop.classList.remove("drag-over");
+        });
+      });
+
+      drop.addEventListener("drop", event => {
+        if (event.dataTransfer.files.length) {
+          const file = event.dataTransfer.files[0];
+          if (!file.name.toLowerCase().endsWith(".csv")) {
+            alert("Please select a CSV file.");
+            return;
+          }
+          const dt = new DataTransfer();
+          dt.items.add(file);
+          input.files = dt.files;
+          drop.querySelector("strong").textContent = file.name;
+        }
+      });
+    }
+
+    const generateButton = document.getElementById("generate-insights");
+    const aiStatus = document.getElementById("ai-status");
+    const aiOutput = document.getElementById("ai-output");
+    const aiText = document.getElementById("ai-text");
+    const reportDataElement = document.getElementById("report-data");
+
+    if (generateButton && aiStatus && aiOutput && aiText && reportDataElement) {
+      generateButton.addEventListener("click", async () => {
+        generateButton.disabled = true;
+        generateButton.textContent = "Generating insights…";
+        aiStatus.hidden = false;
+        aiStatus.textContent = "Asking Gemma to explain your calculated metrics. This may take a moment.";
+        aiOutput.hidden = true;
+        aiText.textContent = "";
+
+        try {
+          const report = JSON.parse(reportDataElement.textContent);
+
+          const response = await fetch("/api/explain", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              totals: report.totals,
+              products: report.products
+            })
+          });
+
+          const data = await response.json().catch(() => ({}));
+
+          if (!response.ok) {
+            throw new Error(data.error || "The AI request failed. Please try again.");
+          }
+
+          if (!data.explanation) {
+            throw new Error("The AI returned an empty explanation.");
+          }
+
+          // Display model output as plain text, not executable HTML.
+          aiText.textContent = data.explanation;
+          aiOutput.hidden = false;
+          aiStatus.textContent = "Insights generated using " + (data.model || "the configured AI model") + ".";
+        } catch (error) {
+          aiStatus.textContent = error.message || "Unable to generate insights. Please try again.";
+        } finally {
+          generateButton.disabled = false;
+          generateButton.textContent = "✦  Generate AI Profit Insights";
+        }
+      });
+    }
+  </script>
+</body>
+</html>
